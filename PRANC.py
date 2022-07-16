@@ -32,7 +32,7 @@ def save_signature(dirname, mean = None, var = None):
 parser = argparse.ArgumentParser(description='Arguments of program')
 parser.add_argument('--seed', default=0, type=int)
 parser.add_argument('--size', default=32, type=int)
-parser.add_argument('--k', default=10000, type=int)
+parser.add_argument('--k', default=1000, type=int)
 parser.add_argument('--resume', action='store_true')
 parser.add_argument('--evaluate', action='store_true')
 parser.add_argument('--save_model', action='store_true')
@@ -102,7 +102,7 @@ img = transforms.ToTensor()(img).float().to(device, dtype)
 
 with torch.no_grad():
     theta = torch.cat([p.flatten() for p in train_net.parameters()])
-net_optimizer = optim.SGD(train_net.parameters(), lr=1.)
+net_optimizer = optim.Adam(train_net.parameters(), lr=1e-3)
 lin_comb_net = torch.zeros(theta.shape).cuda()
 layer_cnt = len([p for p in train_net.parameters()])
 shapes = [list(p.shape) for p in train_net.parameters()]
@@ -221,7 +221,7 @@ with tqdm.trange(5000, ncols=100) as t:
                 alpha.grad = torch.zeros(alpha.shape, device=alpha.get_device())
             alpha.grad[idx] = torch.matmul(grads, basis_net.T)
             optimizer.step()
-            
+            net_optimizer.step()
             
             
             # Calculate psnr

@@ -207,7 +207,7 @@ with tqdm.trange(5000, ncols=100) as t:
                     p.copy_((select_subnet + rest_of_net)[start_ind:start_ind + lengths[j]].view(shapes[j]))
                     start_ind += lengths[j]
             predicted = train_net(coordinates)
-            loss = nn.MSE(predicted, features)
+            loss = nn.MSELoss(predicted, features)
             # if i % log_rate == 0:
             #     print("Epoch:", e, "\tIteration:", i, "\tLoss:", loss.item())
             loss.backward()

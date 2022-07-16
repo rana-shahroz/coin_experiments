@@ -183,7 +183,7 @@ steps = 0  # Number of steps taken in training
 best_vals = {'psnr': 0.0, 'loss': 1e8}
 logs = {'psnr': [], 'loss': []}
         # Store parameters of best model (in terms of highest PSNR achieved)
-best_model = OrderedDict((k, v.detach().clone()) for k, v in representation.state_dict().items())
+best_model = OrderedDict((k, v.detach().clone()) for k, v in train_net.state_dict().items())
         
 model_size = util.model_size_in_bits(train_net) / 8000.
 print(f'Model size: {model_size:.1f}kB')

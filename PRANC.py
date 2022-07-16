@@ -229,7 +229,7 @@ with tqdm.trange(5000, ncols=100) as t:
                 # Print results and update logs
             log_dict = {'loss': loss.item(),
                             'psnr': psnr,
-                            'best_psnr': self.best_vals['psnr']}
+                            'best_psnr': best_vals['psnr']}
             t.set_postfix(**log_dict)
             for key in ['loss', 'psnr']:
                 logs[key].append(log_dict[key])

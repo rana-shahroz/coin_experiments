@@ -189,7 +189,7 @@ model_size = util.model_size_in_bits(train_net) / 8000.
 print(f'Model size: {model_size:.1f}kB')
 fp_bpp = util.bpp(model=train_net, image=img)
 print(f'Full precision bpp: {fp_bpp:.2f}') 
-
+loss_func = nn.MSELoss()
 with tqdm.trange(5000, ncols=100) as t:
     random.shuffle(perm)
     idx = perm[:window]
@@ -207,7 +207,8 @@ with tqdm.trange(5000, ncols=100) as t:
                     p.copy_((select_subnet + rest_of_net)[start_ind:start_ind + lengths[j]].view(shapes[j]))
                     start_ind += lengths[j]
             predicted = train_net(coordinates)
-            loss = nn.MSELoss(predicted, features)
+            
+            loss = loss_func(predicted, features)
             # if i % log_rate == 0:
             #     print("Epoch:", e, "\tIteration:", i, "\tLoss:", loss.item())
             loss.backward()

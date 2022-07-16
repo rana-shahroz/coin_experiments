@@ -32,7 +32,7 @@ def save_signature(dirname, mean = None, var = None):
 parser = argparse.ArgumentParser(description='Arguments of program')
 parser.add_argument('--seed', default=0, type=int)
 parser.add_argument('--size', default=32, type=int)
-parser.add_argument('--k', default=1000, type=int)
+parser.add_argument('--k', default=10000, type=int)
 parser.add_argument('--resume', action='store_true')
 parser.add_argument('--evaluate', action='store_true')
 parser.add_argument('--save_model', action='store_true')

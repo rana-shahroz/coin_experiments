@@ -45,6 +45,8 @@ parser.add_argument('--dataset', default='../datasets', type=str)
 parser.add_argument('--save_path', default='./random_basis', type=str)
 parser.add_argument('--task', default='cifar10', type=str, help='options: cifar10, cifar100, tiny')
 parser.add_argument('--model', default='resnet20', type=str, help='options: lenet, alexnet, resnet20, resnet56, convnet')
+parser.add_argument("-w0", "--w0", help="w0 parameter for SIREN model.", type=float, default=30.0)
+parser.add_argument("-w0i", "--w0_initial", help="w0 parameter for first layer of SIREN model.", type=float, default=30.0)
 device = "cuda:0"
 args = parser.parse_args()
 
@@ -68,9 +70,9 @@ batch_size = args.batch_size
     # Setup model
 test_net = Siren(
         dim_in=2,
-        dim_hidden=args.layer_size,
+        dim_hidden=49,
         dim_out=3,
-        num_layers=args.num_layers,
+        num_layers=13,
         final_activation=torch.nn.Identity(),
         w0_initial=args.w0_initial,
         w0=args.w0
@@ -78,9 +80,9 @@ test_net = Siren(
 
 train_net = Siren(
         dim_in=2,
-        dim_hidden=args.layer_size,
+        dim_hidden=49,
         dim_out=3,
-        num_layers=args.num_layers,
+        num_layers=13,
         final_activation=torch.nn.Identity(),
         w0_initial=args.w0_initial,
         w0=args.w0

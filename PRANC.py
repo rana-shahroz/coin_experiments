@@ -221,7 +221,7 @@ with tqdm.trange(5000, ncols=100) as t:
                 alpha.grad = torch.zeros(alpha.shape, device=alpha.get_device())
             alpha.grad[idx] = torch.matmul(grads, basis_net.T)
             optimizer.step()
-            net_optimizer.step()
+            # net_optimizer.step()
             
             
             # Calculate psnr
@@ -245,8 +245,10 @@ with tqdm.trange(5000, ncols=100) as t:
                 if i > int(5000 / 2.):
                     for k, v in train_net.state_dict().items():
                         best_model[k].copy_(v)
-                with torch.no_grad():
-                    lin_comb_net.copy_(rest_of_net + torch.matmul(basis_net.T, alpha[idx]).T)
+            with torch.no_grad():
+                lin_comb_net.copy_(rest_of_net + torch.matmul(basis_net.T, alpha[idx]).T)
+                
+            reset_lin_comb()
 
 
        

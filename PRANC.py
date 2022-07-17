@@ -208,7 +208,7 @@ with tqdm.trange(5000, ncols=100) as t:
                 for j, p in enumerate(train_net.parameters()):
                     p.copy_((select_subnet + rest_of_net)[start_ind:start_ind + lengths[j]].view(shapes[j]))
                     start_ind += lengths[j]
-            predicted = train_net(coordinates)
+            predicted = train_net(coordinates).detach()
             
             loss = loss_func(predicted, features)
             # if i % log_rate == 0:

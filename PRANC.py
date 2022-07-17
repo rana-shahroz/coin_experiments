@@ -102,7 +102,7 @@ img = transforms.ToTensor()(img).float().to(device, dtype)
 
 with torch.no_grad():
     theta = torch.cat([p.flatten() for p in train_net.parameters()])
-net_optimizer = optim.Adam(train_net.parameters(), lr=1e-3)
+net_optimizer = optim.SGD(train_net.parameters(), lr=1.)
 lin_comb_net = torch.zeros(theta.shape).cuda()
 layer_cnt = len([p for p in train_net.parameters()])
 shapes = [list(p.shape) for p in train_net.parameters()]
@@ -190,14 +190,16 @@ print(f'Model size: {model_size:.1f}kB')
 fp_bpp = util.bpp(model=train_net, image=img)
 print(f'Full precision bpp: {fp_bpp:.2f}') 
 loss_func = nn.MSELoss()
+optimizer = torch.optim.SGD([alpha], lr=args.lr, momentum=.9, weight_decay=1e-4)
 with tqdm.trange(5000, ncols=100) as t:
-    random.shuffle(perm)
-    idx = perm[:window]
-    fill_net(idx)
-    with torch.no_grad():
-        rest_of_net = lin_comb_net - torch.matmul(basis_net.T, alpha[idx]).T
-    optimizer = torch.optim.Adam([alpha], lr=args.lr)
     for i in t:
+        random.shuffle(perm)
+        idx = perm[:window]
+        fill_net(idx)
+        with torch.no_grad():
+            rest_of_net = lin_comb_net - torch.matmul(basis_net.T, alpha[idx]).T
+    
+    
             optimizer.zero_grad()
             net_optimizer.zero_grad()
             select_subnet = torch.matmul(basis_net.T, alpha[idx]).T

@@ -245,6 +245,8 @@ with tqdm.trange(5000, ncols=100) as t:
                 if i > int(5000 / 2.):
                     for k, v in train_net.state_dict().items():
                         best_model[k].copy_(v)
+                with torch.no_grad():
+                    lin_comb_net.copy_(rest_of_net + torch.matmul(basis_net.T, alpha[idx]).T)
 
 
        
